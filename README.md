@@ -14,16 +14,16 @@ You can find here the codes for our Wireless Sensor Network Project.
 
 ### MAC Layer
 
-- Sensor sender: [mac.phy](/mac/mac.phy)
-- Receiver gateway: [demac.phy](/mac/demac.phy)
-- Conversion functions: [utils.phy](/mac/utils.phy)
+- Sensor sender: [mac.phy](mac/mac.phy)
+- Receiver gateway: [demac.phy](mac/demac.phy)
+- Conversion functions: [utils.phy](mac/utils.phy)
 
 ### PHY Layer
 
-- Initial version : [initial](/phy/mymoddemod.grc)
-- One USRP managing : [one_usrp](/phy/mymoddemodusrp.grc)
+- Initial version : [initial](phy/mymoddemod.grc)
+- One USRP managing : [one_usrp](phy/mymoddemodusrp.grc)
 - Two USRP managing:
-  -  Sender: [ursp_modulation.grc](Modulation)
-  -  Receiver: [ursp_demodulation.grc](Demodulation)
+  -  Sender: [Modulation](phy/ursp_modulation.grc)
+  -  Receiver: [Demodulation](phy/ursp_demodulation.grc)
 
-Some results are here for the two sides usrps: [results](/phy/tramerecue_decoded.txt)
+Some results are here for the two sides usrps: [results](phy/tramerecue_decoded.txt)
