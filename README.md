@@ -21,7 +21,7 @@ You can find here the codes for our Wireless Sensor Network Project.
 ### PHY Layer
 
 - Initial version : [initial](phy/mymoddemod.grc)
-- One USRP managing : [one_usrp](phy/mymoddemodusrp.grc)
+- One USRP managing : [one_usrp](phy/mymodedemodusrp.grc)
 - Two USRP managing:
   -  Sender: [Modulation](phy/ursp_modulation.grc)
   -  Receiver: [Demodulation](phy/ursp_demodulation.grc)
