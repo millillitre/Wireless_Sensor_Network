@@ -14,9 +14,9 @@ You can find here the codes for our Wireless Sensor Network Project.
 
 ### MAC Layer
 
-- Sensor sender: [mac.phy](mac/mac.py)
-- Receiver gateway: [demac.phy](mac/demac.py)
-- Conversion functions: [utils.phy](mac/utils.py)
+- Sensor sender: [mac.py](mac/mac.py)
+- Receiver gateway: [demac.py](mac/demac.py)
+- Conversion functions: [utils.py](mac/utils.py)
 
 ### PHY Layer
 
