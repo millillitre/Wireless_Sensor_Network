@@ -1,6 +1,9 @@
 from utils import *
+import struct
+import zlib
 
 addr_gateway = "11010010"
+TRAME_SIZE = 22  # 1(addr) + 16(payload) + 1(padding) + 4(crc)
 cle_crc = "100000100110000010001110110110111"
 
 def xor(a, b):
@@ -83,8 +86,36 @@ def check_crc(trame_string, cle):
 
 def decoder(verified_payload):
     adr_dest = verified_payload[0:8]
-    data = verified_payload[9:]
-    return adr_dest, data
+    adr_sender = verified_payload[8:16]
+    data = verified_payload[16:]
+    return adr_dest, adr_sender, data
+
+def decode_mac_frame_to_text(filename, output_txt):
+    with open(filename, "rb") as f:
+        data = f.read()
+
+    n_trames = len(data) // TRAME_SIZE
+    print(f"Nombre de trames : {n_trames}\n")
+
+    with open(output_txt, "w") as out:
+        out.write("Trame\tAddress\tCowID\tLatitude\tLongitude\tAltitude\tCRC_OK\n")
+        for i in range(n_trames):
+            trame = data[i*TRAME_SIZE:(i+1)*TRAME_SIZE]
+
+            if len(trame) < TRAME_SIZE:
+                print(f"Trame {i+1} trop courte, skipped")
+                continue
+
+            # Décodage : Header(1) + Payload(16) + Bourrage(1) + CRC(4)
+            address, cow_id, latitude, longitude, altitude, padding, crc_rx = struct.unpack(">BIIII B I", trame)
+
+            # CRC calculé sur tout sauf les 4 derniers octets (CRC)
+            crc_calc = zlib.crc32(trame[:-4]) & 0xFFFFFFFF
+            crc_ok = crc_rx == crc_calc
+
+            out.write(f"{i+1}\t{hex(address)}\t{cow_id}\t{latitude}\t{longitude}\t{altitude}\t{crc_ok}\n")
+
+    print(f"Données enregistrées dans {output_txt}")
 
 def main():
     supp = 0
@@ -94,7 +125,7 @@ def main():
             if len(payload)!=0:
                 verified_payload = check_crc(payload, cle_crc)
                 if verified_payload != None:
-                    adr_dest, data = decoder(verified_payload)
+                    adr_dest, adr_sender, data = decoder(verified_payload)
                     if adr_dest == addr_gateway:
                         write_line("app.txt", data) 
 
