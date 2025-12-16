@@ -110,25 +110,41 @@ def decode_mac_frame_to_text(filename, output_txt):
             address, cow_id, latitude, longitude, altitude, padding, crc_rx = struct.unpack(">BIIII B I", trame)
 
             # CRC calculé sur tout sauf les 4 derniers octets (CRC)
-            crc_calc = zlib.crc32(trame[:-4]) & 0xFFFFFFFF
-            crc_ok = crc_rx == crc_calc
+            # crc_calc = zlib.crc32(trame[:-4]) & 0xFFFFFFFF
+            crc_ok = crc_rx == cle_crc
 
             out.write(f"{i+1}\t{hex(address)}\t{cow_id}\t{latitude}\t{longitude}\t{altitude}\t{crc_ok}\n")
 
     print(f"Données enregistrées dans {output_txt}")
 
-def main():
-    supp = 0
-    while True:
-            payload = read_and_delete("payload.txt", supp)
-            supp+=1
-            if len(payload)!=0:
-                verified_payload = check_crc(payload, cle_crc)
-                if verified_payload != None:
-                    adr_dest, adr_sender, data = decoder(verified_payload)
-                    if adr_dest == addr_gateway:
-                        write_line("app.txt", data) 
+def main(filename_in="payload.bin", filename_out="app.bin"):
+    with open(filename_in, "rb") as f:
+        payload_bytes = f.read()
+    
+    # Convertir les bytes en string binaire pour traitement
+    payload = ''.join(format(byte, '08b') for byte in payload_bytes)
+    
+    if len(payload) != 0:
+        verified_payload = check_crc(payload, cle_crc)
+        if verified_payload != None:
+            adr_dest, adr_sender, data = decoder(verified_payload)
+            if adr_dest == addr_gateway:
+                # Convertir data (string binaire) en bytes et écrire en binaire
+                data_bytes = bytes(int(data[i:i+8], 2) for i in range(0, len(data), 8))
+                with open(filename_out, "ab") as f:
+                    f.write(data_bytes)
+
 
 if __name__ == "__main__":
-    main()
+    import sys
+    if len(sys.argv) > 2:
+        filename_in = sys.argv[1]
+        filename_out = sys.argv[2]
+    elif len(sys.argv) > 1:
+        filename_in = sys.argv[1]
+        filename_out = "app.bin"
+    else:
+        filename_in = "payload.bin"
+        filename_out = "app.bin"
+    main(filename_in, filename_out)
 				
