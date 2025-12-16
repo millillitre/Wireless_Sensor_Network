@@ -117,7 +117,7 @@ def decode_mac_frame_to_text(filename, output_txt):
 
     print(f"Données enregistrées dans {output_txt}")
 
-def main(filename_in="payload.bin", filename_out="app.bin"):
+def main(filename_in="payload.bin", filename_out="app.txt"):
     with open(filename_in, "rb") as f:
         payload_bytes = f.read()
     
@@ -129,10 +129,11 @@ def main(filename_in="payload.bin", filename_out="app.bin"):
         if verified_payload != None:
             adr_dest, adr_sender, data = decoder(verified_payload)
             if adr_dest == addr_gateway:
-                # Convertir data (string binaire) en bytes et écrire en binaire
+                # Convertir data (string binaire) en texte et écrire en texte
                 data_bytes = bytes(int(data[i:i+8], 2) for i in range(0, len(data), 8))
-                with open(filename_out, "ab") as f:
-                    f.write(data_bytes)
+                data_text = data_bytes.decode('utf-8', errors='replace')
+                with open(filename_out, "a") as f:
+                    f.write(data_text + "\n")
 
 
 if __name__ == "__main__":
@@ -142,9 +143,9 @@ if __name__ == "__main__":
         filename_out = sys.argv[2]
     elif len(sys.argv) > 1:
         filename_in = sys.argv[1]
-        filename_out = "app.bin"
+        filename_out = "app.txt"
     else:
         filename_in = "payload.bin"
-        filename_out = "app.bin"
+        filename_out = "app.txt"
     main(filename_in, filename_out)
 				
