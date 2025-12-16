@@ -40,6 +40,7 @@ blocks:
     const_points: '[-1-1j, -1+1j, 1+1j, 1-1j]'
     dims: '1'
     normalization: digital.constellation.AMPLITUDE_NORMALIZATION
+    npwr: '1.0'
     precision: '8'
     rot_sym: '4'
     soft_dec_lut: None
@@ -49,7 +50,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [320, 16.0]
+    coordinate: [320, 4.0]
     rotation: 0
     state: enabled
 - name: header
@@ -61,23 +62,9 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [696, 24.0]
+    coordinate: [720, 8.0]
     rotation: 0
     state: enabled
-- name: header
-  id: variable_header_format_default
-  parameters:
-    access_code: '"11100001010110101110100010010011"'
-    bps: '1'
-    comment: ''
-    threshold: '0'
-  states:
-    bus_sink: false
-    bus_source: false
-    bus_structure: null
-    coordinate: [1096, 24.0]
-    rotation: 0
-    state: disabled
 - name: key
   id: variable
   parameters:
@@ -87,9 +74,21 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [888, 24.0]
+    coordinate: [952, 8.0]
     rotation: 0
     state: enabled
+- name: loop_bandwidth
+  id: variable
+  parameters:
+    comment: ''
+    value: '0.1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1192, 8.0]
+    rotation: 0
+    state: true
 - name: samp_rate
   id: variable
   parameters:
@@ -99,7 +98,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [200, 12]
+    coordinate: [208, 8.0]
     rotation: 0
     state: enabled
 - name: taps
@@ -112,7 +111,59 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [520, 24.0]
+    coordinate: [520, 8.0]
+    rotation: 0
+    state: enabled
+- name: RX_0_0
+  id: virtual_sink
+  parameters:
+    alias: ''
+    comment: ''
+    stream_id: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1184, 512.0]
+    rotation: 0
+    state: enabled
+- name: RX_1
+  id: virtual_source
+  parameters:
+    alias: ''
+    comment: ''
+    stream_id: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [40, 600.0]
+    rotation: 0
+    state: enabled
+- name: TX_RX_0_0
+  id: virtual_sink
+  parameters:
+    alias: ''
+    comment: ''
+    stream_id: '0'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1480, 264.0]
+    rotation: 0
+    state: enabled
+- name: TX_RX_1
+  id: virtual_source
+  parameters:
+    alias: ''
+    comment: ''
+    stream_id: '0'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [32, 408.0]
     rotation: 0
     state: enabled
 - name: analog_agc_xx_0
@@ -132,7 +183,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [296, 384.0]
+    coordinate: [248, 380.0]
     rotation: 0
     state: enabled
 - name: blocks_file_sink_0
@@ -142,7 +193,7 @@ blocks:
     alias: ''
     append: 'False'
     comment: ''
-    file: /home/jp/Insa/5A/Semestre1/WSN/projet/tramerecue.bin
+    file: /home/gnuradio/Documents/TP-JPH/projet/tramerecue.bin
     type: byte
     unbuffered: 'False'
     vlen: '1'
@@ -150,7 +201,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1040, 584.0]
+    coordinate: [1472, 580.0]
     rotation: 0
     state: enabled
 - name: blocks_file_source_0
@@ -160,7 +211,7 @@ blocks:
     alias: ''
     begin_tag: pmt.PMT_NIL
     comment: ''
-    file: /home/jp/Insa/5A/Semestre1/WSN/projet/mac_frame.bin
+    file: /home/gnuradio/Documents/TP-JPH/projet/mac_frame.bin
     length: '0'
     maxoutbuf: '0'
     minoutbuf: '0'
@@ -172,7 +223,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [48, 200.0]
+    coordinate: [24, 164.0]
     rotation: 0
     state: enabled
 - name: blocks_repack_bits_bb_0
@@ -192,7 +243,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [832, 592.0]
+    coordinate: [1208, 588.0]
     rotation: 0
     state: enabled
 - name: blocks_stream_to_tagged_stream_0
@@ -211,7 +262,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [280, 224.0]
+    coordinate: [264, 268.0]
     rotation: 0
     state: enabled
 - name: blocks_tagged_stream_mux_0
@@ -231,16 +282,18 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [736, 208.0]
+    coordinate: [688, 264.0]
     rotation: 0
     state: enabled
-- name: blocks_throttle_0
-  id: blocks_throttle
+- name: blocks_throttle2_0
+  id: blocks_throttle2
   parameters:
     affinity: ''
     alias: ''
     comment: ''
     ignoretag: 'True'
+    limit: auto
+    maximum: '0.1'
     maxoutbuf: '0'
     minoutbuf: '0'
     samples_per_second: samp_rate
@@ -250,9 +303,9 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [96, 412.0]
+    coordinate: [1256, 252.0]
     rotation: 0
-    state: true
+    state: enabled
 - name: digital_constellation_decoder_cb_0
   id: digital_constellation_decoder_cb
   parameters:
@@ -266,7 +319,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [96, 600.0]
+    coordinate: [272, 600.0]
     rotation: 0
     state: enabled
 - name: digital_constellation_modulator_0
@@ -288,7 +341,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [992, 192.0]
+    coordinate: [968, 236.0]
     rotation: 0
     state: enabled
 - name: digital_correlate_access_code_xx_ts_0
@@ -307,7 +360,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [544, 584.0]
+    coordinate: [832, 580.0]
     rotation: 0
     state: enabled
 - name: digital_costas_loop_cc_0
@@ -320,12 +373,12 @@ blocks:
     minoutbuf: '0'
     order: '2'
     use_snr: 'False'
-    w: '0.0628'
+    w: loop_bandwidth
   states:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [784, 368.0]
+    coordinate: [824, 368.0]
     rotation: 0
     state: enabled
 - name: digital_diff_decoder_bb_0
@@ -342,7 +395,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [344, 592.0]
+    coordinate: [576, 588.0]
     rotation: 0
     state: enabled
 - name: digital_pfb_clock_sync_xxx_0
@@ -353,7 +406,7 @@ blocks:
     comment: ''
     filter_size: '32'
     init_phase: '16'
-    loop_bw: '0.0628'
+    loop_bw: loop_bandwidth
     max_dev: '1.5'
     maxoutbuf: '0'
     minoutbuf: '0'
@@ -365,7 +418,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [480, 356.0]
+    coordinate: [472, 352.0]
     rotation: 0
     state: enabled
 - name: digital_protocol_formatter_bb_0
@@ -382,7 +435,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [480, 160.0]
+    coordinate: [472, 148.0]
     rotation: 0
     state: enabled
 - name: qtgui_sink_x_0
@@ -411,22 +464,24 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1080, 376.0]
+    coordinate: [1184, 364.0]
     rotation: 0
     state: enabled
 
 connections:
+- [RX_1, '0', digital_constellation_decoder_cb_0, '0']
+- [TX_RX_1, '0', analog_agc_xx_0, '0']
 - [analog_agc_xx_0, '0', digital_pfb_clock_sync_xxx_0, '0']
 - [blocks_file_source_0, '0', blocks_stream_to_tagged_stream_0, '0']
 - [blocks_repack_bits_bb_0, '0', blocks_file_sink_0, '0']
 - [blocks_stream_to_tagged_stream_0, '0', blocks_tagged_stream_mux_0, '1']
 - [blocks_stream_to_tagged_stream_0, '0', digital_protocol_formatter_bb_0, '0']
 - [blocks_tagged_stream_mux_0, '0', digital_constellation_modulator_0, '0']
-- [blocks_throttle_0, '0', analog_agc_xx_0, '0']
+- [blocks_throttle2_0, '0', TX_RX_0_0, '0']
 - [digital_constellation_decoder_cb_0, '0', digital_diff_decoder_bb_0, '0']
-- [digital_constellation_modulator_0, '0', blocks_throttle_0, '0']
+- [digital_constellation_modulator_0, '0', blocks_throttle2_0, '0']
 - [digital_correlate_access_code_xx_ts_0, '0', blocks_repack_bits_bb_0, '0']
-- [digital_costas_loop_cc_0, '0', digital_constellation_decoder_cb_0, '0']
+- [digital_costas_loop_cc_0, '0', RX_0_0, '0']
 - [digital_costas_loop_cc_0, '0', qtgui_sink_x_0, '0']
 - [digital_diff_decoder_bb_0, '0', digital_correlate_access_code_xx_ts_0, '0']
 - [digital_pfb_clock_sync_xxx_0, '0', digital_costas_loop_cc_0, '0']
@@ -434,4 +489,4 @@ connections:
 
 metadata:
   file_format: 1
-  grc_version: 3.10.5.1
+  grc_version: 3.10.12.0
