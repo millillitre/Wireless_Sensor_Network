@@ -1,7 +1,7 @@
 from utils import *
 
 addr_gateway = "11010010"
-cle_crc = "10011001"
+cle_crc = "100000100110000010001110110110111"
 
 def xor(a, b):
  
@@ -75,7 +75,7 @@ def check_crc(trame_string, cle):
     
     if reste == a_comparer: # comparaion du reste avec la valeur attendue
         print("Trame correcte !")
-        verified_payload = trame_string[:-7]
+        verified_payload = trame_string[:-32]
         return(verified_payload) # renvoi de la charge utile
     else: # sinon erreur crc
         print("Erreur bit sur la trame recue : rest = " + reste)
