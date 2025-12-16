@@ -1,7 +1,7 @@
 from utils import *
 
 addr_gateway = "11010010"
-cle_crc = "1001"
+cle_crc = "10011001"
 
 def xor(a, b):
  
@@ -69,13 +69,15 @@ def encoder(data, key):
     return data + remainder
 
 def check_crc(trame_string, cle):
+    # recuperation de la trame et application de l'algorithme 
     reste = mod2div(trame_string,cle)
     a_comparer = '0'*(len(cle)-1)
-    if reste == a_comparer:
+    
+    if reste == a_comparer: # comparaion du reste avec la valeur attendue
         print("Trame correcte !")
-        verified_payload = trame_string[:-3]
-        return(verified_payload)
-    else:
+        verified_payload = trame_string[:-7]
+        return(verified_payload) # renvoi de la charge utile
+    else: # sinon erreur crc
         print("Erreur bit sur la trame recue : rest = " + reste)
         return(None)
 
@@ -84,14 +86,18 @@ def decoder(verified_payload):
     data = verified_payload[9:]
     return adr_dest, data
 
+def main():
+    supp = 0
+    while True:
+            payload = read_and_delete("payload.txt", supp)
+            supp+=1
+            if len(payload)!=0:
+                verified_payload = check_crc(payload, cle_crc)
+                if verified_payload != None:
+                    adr_dest, data = decoder(verified_payload)
+                    if adr_dest == addr_gateway:
+                        write_line("app.txt", data) 
 
-while True:
-		payload = read_and_delete("payload.txt", supp)
-		supp+=1
-		if len(payload)!=0:
-			verified_payload = check_crc(payload, cle_crc)
-			if verified_payload != None:
-				adr_dest, data = decoder(verified_payload)
-				if adr_dest == addr_gateway:
-				    write_line("app.txt", data) 
+if __name__ == "__main__":
+    main()
 				
