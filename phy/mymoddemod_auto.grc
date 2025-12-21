@@ -1,0 +1,563 @@
+options:
+  parameters:
+    author: ''
+    catch_exceptions: 'True'
+    category: '[GRC Hier Blocks]'
+    cmake_opt: ''
+    comment: ''
+    copyright: ''
+    description: ''
+    gen_cmake: 'On'
+    gen_linking: dynamic
+    generate_options: qt_gui
+    hier_block_src_path: '.:'
+    id: moddemod
+    max_nouts: '0'
+    output_language: python
+    placement: (0,0)
+    qt_qss_theme: ''
+    realtime_scheduling: ''
+    run: 'True'
+    run_command: '{python} -u {filename}'
+    run_options: prompt
+    sizing_mode: fixed
+    thread_safe_setters: ''
+    title: Not titled yet
+    window_size: (1000,1000)
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [8, 8]
+    rotation: 0
+    state: enabled
+
+blocks:
+- name: BPSK
+  id: variable_constellation
+  parameters:
+    comment: ''
+    const_points: '[-1-1j, -1+1j, 1+1j, 1-1j]'
+    dims: '1'
+    normalization: digital.constellation.AMPLITUDE_NORMALIZATION
+    npwr: '1.0'
+    precision: '8'
+    rot_sym: '4'
+    soft_dec_lut: None
+    sym_map: '[0, 1, 3, 2]'
+    type: bpsk
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [320, 16.0]
+    rotation: 0
+    state: enabled
+- name: header
+  id: variable
+  parameters:
+    comment: ''
+    value: digital.header_format_default(key,0)
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [696, 24.0]
+    rotation: 0
+    state: enabled
+- name: header
+  id: variable_header_format_default
+  parameters:
+    access_code: '"11100001010110101110100010010011"'
+    bps: '1'
+    comment: ''
+    threshold: '0'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1096, 24.0]
+    rotation: 0
+    state: disabled
+- name: key
+  id: variable
+  parameters:
+    comment: ''
+    value: '"111000010101101010101010101110100010010011"'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [888, 24.0]
+    rotation: 0
+    state: enabled
+- name: samp_rate
+  id: variable
+  parameters:
+    comment: ''
+    value: '1000000'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [200, 12]
+    rotation: 0
+    state: enabled
+- name: taps
+  id: variable
+  parameters:
+    comment: ''
+    value: firdes.root_raised_cosine(gain=1.0, sampling_freq=samp_rate, symbol_rate=500000
+      , alpha=0.35, ntaps=101)
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [520, 24.0]
+    rotation: 0
+    state: enabled
+- name: analog_agc_xx_0
+  id: analog_agc_xx
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    gain: '1.0'
+    max_gain: '2'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    rate: 1e-4
+    reference: '1.0'
+    type: complex
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [296, 384.0]
+    rotation: 0
+    state: enabled
+- name: blocks_file_sink_0
+  id: blocks_file_sink
+  parameters:
+    affinity: ''
+    alias: ''
+    append: 'False'
+    comment: ''
+    file: /home/hilal/Documents/WSN_alea/tramerecue.bin
+    type: byte
+    unbuffered: 'False'
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1040, 584.0]
+    rotation: 0
+    state: disabled
+- name: blocks_file_source_0
+  id: blocks_file_source
+  parameters:
+    affinity: ''
+    alias: ''
+    begin_tag: pmt.PMT_NIL
+    comment: ''
+    file: /home/hilal/Documents/WSN_projet/mac_frame.bin
+    length: '0'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    offset: '0'
+    repeat: 'True'
+    type: byte
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [48, 200.0]
+    rotation: 0
+    state: disabled
+- name: blocks_repack_bits_bb_0
+  id: blocks_repack_bits_bb
+  parameters:
+    affinity: ''
+    alias: ''
+    align_output: 'False'
+    comment: ''
+    endianness: gr.GR_MSB_FIRST
+    k: '1'
+    l: '8'
+    len_tag_key: '""'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [832, 592.0]
+    rotation: 0
+    state: enabled
+- name: blocks_stream_to_tagged_stream_0
+  id: blocks_stream_to_tagged_stream
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    len_tag_key: '"packet_len"'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    packet_len: '22'
+    type: byte
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [280, 224.0]
+    rotation: 0
+    state: enabled
+- name: blocks_tagged_stream_mux_0
+  id: blocks_tagged_stream_mux
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    lengthtagname: '"packet_len"'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    ninputs: '2'
+    tag_preserve_head_pos: '0'
+    type: byte
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [736, 208.0]
+    rotation: 0
+    state: enabled
+- name: blocks_throttle2_0
+  id: blocks_throttle2
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    ignoretag: 'True'
+    limit: auto
+    maximum: '0.1'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    samples_per_second: samp_rate
+    type: complex
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [88, 400.0]
+    rotation: 0
+    state: enabled
+- name: digital_constellation_decoder_cb_0
+  id: digital_constellation_decoder_cb
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    constellation: BPSK
+    maxoutbuf: '0'
+    minoutbuf: '0'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [96, 600.0]
+    rotation: 0
+    state: enabled
+- name: digital_constellation_modulator_0
+  id: digital_constellation_modulator
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    constellation: BPSK
+    differential: 'True'
+    excess_bw: '0.35'
+    log: 'False'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    samples_per_symbol: '4'
+    truncate: 'False'
+    verbose: 'False'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [992, 192.0]
+    rotation: 0
+    state: enabled
+- name: digital_correlate_access_code_xx_ts_0
+  id: digital_correlate_access_code_xx_ts
+  parameters:
+    access_code: key
+    affinity: ''
+    alias: ''
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    tagname: '"packet_len"'
+    threshold: '1'
+    type: byte
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [544, 584.0]
+    rotation: 0
+    state: enabled
+- name: digital_costas_loop_cc_0
+  id: digital_costas_loop_cc
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    order: '2'
+    use_snr: 'False'
+    w: '0.0628'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [784, 368.0]
+    rotation: 0
+    state: enabled
+- name: digital_diff_decoder_bb_0
+  id: digital_diff_decoder_bb
+  parameters:
+    affinity: ''
+    alias: ''
+    coding: digital.DIFF_DIFFERENTIAL
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    modulus: '2'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [344, 592.0]
+    rotation: 0
+    state: enabled
+- name: digital_pfb_clock_sync_xxx_0
+  id: digital_pfb_clock_sync_xxx
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    filter_size: '32'
+    init_phase: '16'
+    loop_bw: '0.0628'
+    max_dev: '1.5'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    osps: '1'
+    sps: '4'
+    taps: taps
+    type: ccf
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [480, 356.0]
+    rotation: 0
+    state: enabled
+- name: digital_protocol_formatter_bb_0
+  id: digital_protocol_formatter_bb
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    format: header
+    len_tag_key: '"packet_len"'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [480, 160.0]
+    rotation: 0
+    state: enabled
+- name: epy_block_0
+  id: epy_block
+  parameters:
+    _source_code: "\"\"\"\nEmbedded Python Block: Random MAC Frame Generator\n\nCe\
+      \ bloc g\xE9n\xE8re des trames MAC avec des coordonn\xE9es (lat/lon/alt) al\xE9\
+      atoires\net ajoute le tag 'packet_len' n\xE9cessaire pour le traitement en aval.\n\
+      \"\"\"\n\nimport numpy as np\nimport struct\nimport zlib\nimport random\nfrom\
+      \ gnuradio import gr\nimport pmt # Importation essentielle pour les tags de\
+      \ paquets\n\n# Taille totale d'une trame g\xE9n\xE9r\xE9e (1 byte address +\
+      \ 4*4 bytes data + 1 byte padding + 4 bytes CRC)\nFRAME_LEN = 1 + 4 * 4 + 1\
+      \ + 4 \n\nclass blk(gr.sync_block):  # Utilisation de gr.sync_block (Source\
+      \ sans entr\xE9e)\n    \"\"\"Embedded Python Block pour g\xE9n\xE9rer des trames\
+      \ MAC al\xE9atoires\"\"\"\n\n    def __init__(self, address=0x2B, cow_id=2709,\
+      \ min_lat=48000000, max_lat=49000000, min_lon=1500000, max_lon=2500000, min_alt=100,\
+      \ max_alt=200):\n        \"\"\"Arguments de la fonction qui apparaissent comme\
+      \ param\xE8tres dans GRC\"\"\"\n        gr.sync_block.__init__(\n          \
+      \  self,\n            name='Random MAC Frame Generator',  # Nom du bloc dans\
+      \ GRC\n            in_sig=None,\n            out_sig=[np.byte]  # Flux de sortie\
+      \ d'octets\n        )\n        \n        # Initialisation des param\xE8tres\
+      \ (avec les plages que nous avons d\xE9finies)\n        self.address = int(address)\n\
+      \        self.cow_id = int(cow_id)\n        self.min_lat = int(min_lat)\n  \
+      \      self.max_lat = int(max_lat)\n        self.min_lon = int(min_lon)\n  \
+      \      self.max_lon = int(max_lon)\n        self.min_alt = int(min_alt)\n  \
+      \      self.max_alt = int(max_alt)\n\n        self.frame_len = FRAME_LEN\n\n\
+      \    def generate_random_frame(self):\n        \"\"\"G\xE9n\xE8re une seule\
+      \ trame MAC avec des coordonn\xE9es al\xE9atoires et le CRC\"\"\"\n        \n\
+      \        # 1. G\xE9n\xE9rer des valeurs al\xE9atoires\n        latitude = random.randint(self.min_lat,\
+      \ self.max_lat)\n        longitude = random.randint(self.min_lon, self.max_lon)\n\
+      \        altitude = random.randint(self.min_alt, self.max_alt)\n        \n \
+      \       # 2. Cr\xE9er le Payload (Header + Donn\xE9es)\n        # Format: >BIIII\
+      \ (Big-endian: 1 byte + 4 * 4 bytes)\n        payload_bytes = struct.pack(\"\
+      >BIIII\", self.address, self.cow_id, latitude, longitude, altitude)\n      \
+      \  \n        # 3. Ajouter 1 octet de bourrage (padding)\n        payload_bytes\
+      \ += b\"\\x00\"\n        \n        # 4. Calculer le CRC-32 (sur tout sauf le\
+      \ CRC lui-m\xEAme)\n        # & 0xFFFFFFFF est pour assurer une valeur non sign\xE9\
+      e de 32 bits\n        crc = zlib.crc32(payload_bytes) & 0xFFFFFFFF\n       \
+      \ \n        # 5. Frame compl\xE8te = payload + bourrage + CRC\n        # Format\
+      \ pour le CRC: >I (Big-endian: 4 bytes)\n        frame = payload_bytes + struct.pack(\"\
+      >I\", crc)\n        \n        return frame\n\n    def work(self, input_items,\
+      \ output_items):\n        \"\"\"G\xE9n\xE8re et \xE9met une trame compl\xE8\
+      te \xE0 chaque appel\"\"\"\n        \n        out = output_items[0]\n      \
+      \  \n        # Utilisez FRAME_LEN directement\n        frame_len = FRAME_LEN\n\
+      \        \n        # Verify output buffer has enough space\n        if len(out)\
+      \ < frame_len:\n             return 0\n\n        # G\xE9n\xE9rer la trame\n\
+      \        frame_bytes = self.generate_random_frame()\n        frame_np = np.frombuffer(frame_bytes,\
+      \ dtype=np.byte)\n\n        # Copier la trame dans le buffer de sortie\n   \
+      \     out[:frame_len] = frame_np\n\n        # IMPORTANT : Ajout du tag de longueur\
+      \ de paquet\n        # CORRECTED ORDER: Port, Offset, Key, Value\n        self.add_item_tag(0,\
+      \ # Port de sortie 0\n                          self.nitems_written(0), # Offset\
+      \ actuel\n                          pmt.intern(\"packet_len\"), # Cl\xE9 du\
+      \ tag (Symbol PMT)\n                          pmt.from_long(frame_len)) # Valeur\
+      \ du tag (Longueur de 22)\n        \n        # Retourner le nombre d'octets\
+      \ produits\n        return frame_len\n"
+    address: '0x2B'
+    affinity: ''
+    alias: ''
+    comment: ''
+    cow_id: '2709'
+    max_alt: '300'
+    max_lat: '49000000'
+    max_lon: '2500000'
+    maxoutbuf: '0'
+    min_alt: '100'
+    min_lat: '48000000'
+    min_lon: '1500000'
+    minoutbuf: '0'
+  states:
+    _io_cache: "('Random MAC Frame Generator', 'blk', [('address', '43'), ('cow_id',\
+      \ '2709'), ('min_lat', '48000000'), ('max_lat', '49000000'), ('min_lon', '1500000'),\
+      \ ('max_lon', '2500000'), ('min_alt', '100'), ('max_alt', '200')], [], [('0',\
+      \ 'byte', 1)], 'Embedded Python Block pour g\xE9n\xE9rer des trames MAC al\xE9\
+      atoires', ['address', 'cow_id', 'max_alt', 'max_lat', 'max_lon', 'min_alt',\
+      \ 'min_lat', 'min_lon'])"
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [32, 140.0]
+    rotation: 0
+    state: enabled
+- name: epy_block_1
+  id: epy_block
+  parameters:
+    _source_code: "import numpy as np\nfrom gnuradio import gr\nimport struct\nimport\
+      \ zlib\n\nclass blk(gr.sync_block):\n    def __init__(self):\n        gr.sync_block.__init__(\n\
+      \            self,\n            name='MAC Decoder & Display',\n            in_sig=[np.uint8],\
+      \ # On re\xE7oit des octets (char)\n            out_sig=None       # Pas de\
+      \ sortie vers un autre bloc\n        )\n        self.trame_size = 22\n     \
+      \   self.buffer = bytearray()\n        \n        # Pr\xE9paration de l'affichage\
+      \ (Console ou Fen\xEAtre)\n        print(\"\\n\" + \"=\"*60)\n        print(f\"\
+      {'Trame':<8} | {'Addr':<6} | {'CowID':<8} | {'Lat':<10} | {'Long':<10} | {'Alt':<10}\
+      \ | {'CRC':<6}\")\n        print(\"-\" * 60)\n\n    def work(self, input_items,\
+      \ output_items):\n        in_data = input_items[0]\n        \n        # Ajouter\
+      \ les nouvelles donn\xE9es au buffer\n        self.buffer.extend(in_data.tobytes())\n\
+      \n        # Tant qu'on a assez de donn\xE9es pour au moins une trame\n     \
+      \   while len(self.buffer) >= self.trame_size:\n            trame = self.buffer[:self.trame_size]\n\
+      \            self.buffer = self.buffer[self.trame_size:] # On vide ce qu'on\
+      \ a lu\n\n            try:\n                # D\xE9codage identique \xE0 votre\
+      \ script\n                # Format: > (Big Endian) B(1) I(4) I(4) I(4) I(4)\
+      \ B(1) I(4)\n                # Note: Votre unpack original avait un espace \"\
+      B I\", ajust\xE9 ici en \"BI\"\n                res = struct.unpack(\">BIIIIBI\"\
+      , trame)\n                address, cow_id, lat, lon, alt, padding, crc_rx =\
+      \ res\n\n                # V\xE9rification CRC\n                crc_calc = zlib.crc32(trame[:-4])\
+      \ & 0xFFFFFFFF\n                crc_ok = \"OK\" if crc_rx == crc_calc else \"\
+      BAD\"\n\n                # Affichage en temps r\xE9el dans le terminal de GNU\
+      \ Radio\n                print(f\"RECUE    | {hex(address):<6} | {cow_id:<8}\
+      \ | {lat:<10} | {lon:<10} | {alt:<10} | {crc_ok:<6}\")\n                \n \
+      \           except Exception as e:\n                print(f\"Erreur d\xE9codage:\
+      \ {e}\")\n\n        return len(in_data)\n"
+    affinity: ''
+    alias: ''
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+  states:
+    _io_cache: ('MAC Decoder & Display', 'blk', [], [('0', 'byte', 1)], [], '', [])
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1080, 544.0]
+    rotation: 0
+    state: enabled
+- name: qtgui_sink_x_0
+  id: qtgui_sink_x
+  parameters:
+    affinity: ''
+    alias: ''
+    bw: samp_rate
+    comment: ''
+    fc: '0'
+    fftsize: '1024'
+    gui_hint: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    name: '""'
+    plotconst: 'True'
+    plotfreq: 'True'
+    plottime: 'True'
+    plotwaterfall: 'True'
+    rate: '10'
+    showports: 'False'
+    showrf: 'False'
+    type: complex
+    wintype: window.WIN_BLACKMAN_hARRIS
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1080, 376.0]
+    rotation: 0
+    state: enabled
+
+connections:
+- [analog_agc_xx_0, '0', digital_pfb_clock_sync_xxx_0, '0']
+- [blocks_file_source_0, '0', blocks_stream_to_tagged_stream_0, '0']
+- [blocks_repack_bits_bb_0, '0', blocks_file_sink_0, '0']
+- [blocks_repack_bits_bb_0, '0', epy_block_1, '0']
+- [blocks_stream_to_tagged_stream_0, '0', blocks_tagged_stream_mux_0, '1']
+- [blocks_stream_to_tagged_stream_0, '0', digital_protocol_formatter_bb_0, '0']
+- [blocks_tagged_stream_mux_0, '0', digital_constellation_modulator_0, '0']
+- [blocks_throttle2_0, '0', analog_agc_xx_0, '0']
+- [digital_constellation_decoder_cb_0, '0', digital_diff_decoder_bb_0, '0']
+- [digital_constellation_modulator_0, '0', blocks_throttle2_0, '0']
+- [digital_correlate_access_code_xx_ts_0, '0', blocks_repack_bits_bb_0, '0']
+- [digital_costas_loop_cc_0, '0', digital_constellation_decoder_cb_0, '0']
+- [digital_costas_loop_cc_0, '0', qtgui_sink_x_0, '0']
+- [digital_diff_decoder_bb_0, '0', digital_correlate_access_code_xx_ts_0, '0']
+- [digital_pfb_clock_sync_xxx_0, '0', digital_costas_loop_cc_0, '0']
+- [digital_protocol_formatter_bb_0, '0', blocks_tagged_stream_mux_0, '0']
+- [epy_block_0, '0', blocks_stream_to_tagged_stream_0, '0']
+
+metadata:
+  file_format: 1
+  grc_version: 3.10.12.0
