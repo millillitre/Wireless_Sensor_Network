@@ -4,7 +4,7 @@ Designed by :
 - Amalia Magana IR-SC
 - Anya Meetoo IR-SI
 - Célian Hilal Hamdan IR-SC                                                                    
-- Jean-Philippe Loubejac--Combalbert IR-SC
+- Jean-Philippe Loubejac--Combalbert IR-SI
 - Julie Revelli AE-SE
 - Marie-Line Da Costa Bento IR-SC
 
