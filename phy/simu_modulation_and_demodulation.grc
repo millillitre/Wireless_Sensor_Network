@@ -64,20 +64,6 @@ blocks:
     coordinate: [696, 24.0]
     rotation: 0
     state: enabled
-- name: header
-  id: variable_header_format_default
-  parameters:
-    access_code: '"11100001010110101110100010010011"'
-    bps: '1'
-    comment: ''
-    threshold: '0'
-  states:
-    bus_sink: false
-    bus_source: false
-    bus_structure: null
-    coordinate: [1096, 24.0]
-    rotation: 0
-    state: disabled
 - name: key
   id: variable
   parameters:
