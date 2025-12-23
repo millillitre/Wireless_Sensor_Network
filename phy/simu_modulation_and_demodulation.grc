@@ -132,7 +132,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [296, 384.0]
+    coordinate: [408, 380.0]
     rotation: 0
     state: enabled
 - name: blocks_repack_bits_bb_0
@@ -210,7 +210,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [72, 396.0]
+    coordinate: [208, 404.0]
     rotation: 0
     state: true
 - name: digital_constellation_decoder_cb_0
@@ -248,7 +248,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [992, 192.0]
+    coordinate: [992, 196.0]
     rotation: 0
     state: enabled
 - name: digital_correlate_access_code_xx_ts_0
@@ -285,7 +285,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [784, 368.0]
+    coordinate: [952, 360.0]
     rotation: 0
     state: enabled
 - name: digital_diff_decoder_bb_0
@@ -325,7 +325,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [480, 356.0]
+    coordinate: [608, 356.0]
     rotation: 0
     state: enabled
 - name: digital_protocol_formatter_bb_0
@@ -492,9 +492,35 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1160, 332.0]
+    coordinate: [1224, 324.0]
     rotation: 0
     state: enabled
+- name: virtual_sink_0
+  id: virtual_sink
+  parameters:
+    alias: ''
+    comment: ''
+    stream_id: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1256, 220.0]
+    rotation: 0
+    state: true
+- name: virtual_source_0
+  id: virtual_source
+  parameters:
+    alias: ''
+    comment: ''
+    stream_id: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [32, 404.0]
+    rotation: 0
+    state: true
 
 connections:
 - [analog_agc_xx_0, '0', digital_pfb_clock_sync_xxx_0, '0']
@@ -504,7 +530,7 @@ connections:
 - [blocks_tagged_stream_mux_0, '0', digital_constellation_modulator_0, '0']
 - [blocks_throttle_0, '0', analog_agc_xx_0, '0']
 - [digital_constellation_decoder_cb_0, '0', digital_diff_decoder_bb_0, '0']
-- [digital_constellation_modulator_0, '0', blocks_throttle_0, '0']
+- [digital_constellation_modulator_0, '0', virtual_sink_0, '0']
 - [digital_correlate_access_code_xx_ts_0, '0', blocks_repack_bits_bb_0, '0']
 - [digital_costas_loop_cc_0, '0', digital_constellation_decoder_cb_0, '0']
 - [digital_costas_loop_cc_0, '0', qtgui_sink_x_0, '0']
@@ -512,6 +538,7 @@ connections:
 - [digital_pfb_clock_sync_xxx_0, '0', digital_costas_loop_cc_0, '0']
 - [digital_protocol_formatter_bb_0, '0', blocks_tagged_stream_mux_0, '0']
 - [epy_block_0, '0', blocks_stream_to_tagged_stream_0, '0']
+- [virtual_source_0, '0', blocks_throttle_0, '0']
 
 metadata:
   file_format: 1
