@@ -1,0 +1,5 @@
+# Ignore Python cache files
+phy/__pycache__/
+
+# Ignore Python files
+phy/*.py 
