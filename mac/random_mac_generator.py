@@ -10,7 +10,6 @@ FRAME_LEN = 1 + 4 * 4 + 1 + 4
 
 class blk(gr.sync_block):
     def __init__(self, address=0x2B, cow_id=2709, min_lat=48000000, max_lat=49000000, min_lon=1500000, max_lon=2500000, min_alt=100, max_alt=200):
-        """Arguments de la fonction qui apparaissent comme paramètres dans GRC"""
         gr.sync_block.__init__(
             self,
             name='Random MAC Frame Generator',
