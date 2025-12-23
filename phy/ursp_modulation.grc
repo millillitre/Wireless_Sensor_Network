@@ -40,7 +40,6 @@ blocks:
     const_points: '[-1-1j, -1+1j, 1+1j, 1-1j]'
     dims: '1'
     normalization: digital.constellation.AMPLITUDE_NORMALIZATION
-    npwr: '1.0'
     precision: '8'
     rot_sym: '4'
     soft_dec_lut: None
@@ -112,28 +111,6 @@ blocks:
     bus_source: false
     bus_structure: null
     coordinate: [528, 24.0]
-    rotation: 0
-    state: enabled
-- name: blocks_file_source_0
-  id: blocks_file_source
-  parameters:
-    affinity: ''
-    alias: ''
-    begin_tag: pmt.PMT_NIL
-    comment: ''
-    file: /home/gnuradio/Documents/projet_wsn_dream_team/mac_frame.bin
-    length: '0'
-    maxoutbuf: '0'
-    minoutbuf: '0'
-    offset: '0'
-    repeat: 'True'
-    type: byte
-    vlen: '1'
-  states:
-    bus_sink: false
-    bus_source: false
-    bus_structure: null
-    coordinate: [16, 172.0]
     rotation: 0
     state: enabled
 - name: blocks_stream_to_tagged_stream_0
@@ -212,6 +189,85 @@ blocks:
     bus_source: false
     bus_structure: null
     coordinate: [624, 196.0]
+    rotation: 0
+    state: enabled
+- name: epy_block_0
+  id: epy_block
+  parameters:
+    _source_code: "\"\"\"\nEmbedded Python Block: Random MAC Frame Generator\n\nCe\
+      \ bloc g\xE9n\xE8re des trames MAC avec des coordonn\xE9es (lat/lon/alt) al\xE9\
+      atoires\net ajoute le tag 'packet_len' n\xE9cessaire pour le traitement en aval.\n\
+      \"\"\"\n\nimport numpy as np\nimport struct\nimport zlib\nimport random\nfrom\
+      \ gnuradio import gr\nimport pmt # Importation essentielle pour les tags de\
+      \ paquets\n\n# Taille totale d'une trame g\xE9n\xE9r\xE9e (1 byte address +\
+      \ 4*4 bytes data + 1 byte padding + 4 bytes CRC)\nFRAME_LEN = 1 + 4 * 4 + 1\
+      \ + 4 \n\nclass blk(gr.sync_block):  # Utilisation de gr.sync_block (Source\
+      \ sans entr\xE9e)\n    \"\"\"Embedded Python Block pour g\xE9n\xE9rer des trames\
+      \ MAC al\xE9atoires\"\"\"\n\n    def __init__(self, address=0x2B, cow_id=2709,\
+      \ min_lat=48000000, max_lat=49000000, min_lon=1500000, max_lon=2500000, min_alt=100,\
+      \ max_alt=200):\n        \"\"\"Arguments de la fonction qui apparaissent comme\
+      \ param\xE8tres dans GRC\"\"\"\n        gr.sync_block.__init__(\n          \
+      \  self,\n            name='Random MAC Frame Generator',  # Nom du bloc dans\
+      \ GRC\n            in_sig=None,\n            out_sig=[np.byte]  # Flux de sortie\
+      \ d'octets\n        )\n        \n        # Initialisation des param\xE8tres\
+      \ (avec les plages que nous avons d\xE9finies)\n        self.address = int(address)\n\
+      \        self.cow_id = int(cow_id)\n        self.min_lat = int(min_lat)\n  \
+      \      self.max_lat = int(max_lat)\n        self.min_lon = int(min_lon)\n  \
+      \      self.max_lon = int(max_lon)\n        self.min_alt = int(min_alt)\n  \
+      \      self.max_alt = int(max_alt)\n\n        self.frame_len = FRAME_LEN\n\n\
+      \    def generate_random_frame(self):\n        \"\"\"G\xE9n\xE8re une seule\
+      \ trame MAC avec des coordonn\xE9es al\xE9atoires et le CRC\"\"\"\n        \n\
+      \        # 1. G\xE9n\xE9rer des valeurs al\xE9atoires\n        latitude = random.randint(self.min_lat,\
+      \ self.max_lat)\n        longitude = random.randint(self.min_lon, self.max_lon)\n\
+      \        altitude = random.randint(self.min_alt, self.max_alt)\n        \n \
+      \       # 2. Cr\xE9er le Payload (Header + Donn\xE9es)\n        # Format: >BIIII\
+      \ (Big-endian: 1 byte + 4 * 4 bytes)\n        payload_bytes = struct.pack(\"\
+      >BIIII\", self.address, self.cow_id, latitude, longitude, altitude)\n      \
+      \  \n        # 3. Ajouter 1 octet de bourrage (padding)\n        payload_bytes\
+      \ += b\"\\x00\"\n        \n        # 4. Calculer le CRC-32 (sur tout sauf le\
+      \ CRC lui-m\xEAme)\n        # & 0xFFFFFFFF est pour assurer une valeur non sign\xE9\
+      e de 32 bits\n        crc = zlib.crc32(payload_bytes) & 0xFFFFFFFF\n       \
+      \ \n        # 5. Frame compl\xE8te = payload + bourrage + CRC\n        # Format\
+      \ pour le CRC: >I (Big-endian: 4 bytes)\n        frame = payload_bytes + struct.pack(\"\
+      >I\", crc)\n        \n        return frame\n\n    def work(self, input_items,\
+      \ output_items):\n        \"\"\"G\xE9n\xE8re et \xE9met une trame compl\xE8\
+      te \xE0 chaque appel\"\"\"\n        \n        out = output_items[0]\n      \
+      \  \n        # Utilisez FRAME_LEN directement\n        frame_len = FRAME_LEN\n\
+      \        \n        # Verify output buffer has enough space\n        if len(out)\
+      \ < frame_len:\n             return 0\n\n        # G\xE9n\xE9rer la trame\n\
+      \        frame_bytes = self.generate_random_frame()\n        frame_np = np.frombuffer(frame_bytes,\
+      \ dtype=np.byte)\n\n        # Copier la trame dans le buffer de sortie\n   \
+      \     out[:frame_len] = frame_np\n\n        # IMPORTANT : Ajout du tag de longueur\
+      \ de paquet\n        # CORRECTED ORDER: Port, Offset, Key, Value\n        self.add_item_tag(0,\
+      \ # Port de sortie 0\n                          self.nitems_written(0), # Offset\
+      \ actuel\n                          pmt.intern(\"packet_len\"), # Cl\xE9 du\
+      \ tag (Symbol PMT)\n                          pmt.from_long(frame_len)) # Valeur\
+      \ du tag (Longueur de 22)\n        \n        # Retourner le nombre d'octets\
+      \ produits\n        return frame_len\n"
+    address: '0x2B'
+    affinity: ''
+    alias: ''
+    comment: ''
+    cow_id: '2709'
+    max_alt: '300'
+    max_lat: '49000000'
+    max_lon: '2500000'
+    maxoutbuf: '0'
+    min_alt: '100'
+    min_lat: '48000000'
+    min_lon: '1500000'
+    minoutbuf: '0'
+  states:
+    _io_cache: "('Random MAC Frame Generator', 'blk', [('address', '43'), ('cow_id',\
+      \ '2709'), ('min_lat', '48000000'), ('max_lat', '49000000'), ('min_lon', '1500000'),\
+      \ ('max_lon', '2500000'), ('min_alt', '100'), ('max_alt', '200')], [], [('0',\
+      \ 'byte', 1)], 'Embedded Python Block pour g\xE9n\xE9rer des trames MAC al\xE9\
+      atoires', ['address', 'cow_id', 'max_alt', 'max_lat', 'max_lon', 'min_alt',\
+      \ 'min_lat', 'min_lon'])"
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [16, 148.0]
     rotation: 0
     state: enabled
 - name: uhd_usrp_sink_0
@@ -493,13 +549,13 @@ blocks:
     state: true
 
 connections:
-- [blocks_file_source_0, '0', blocks_stream_to_tagged_stream_0, '0']
 - [blocks_stream_to_tagged_stream_0, '0', blocks_tagged_stream_mux_0, '1']
 - [blocks_stream_to_tagged_stream_0, '0', digital_protocol_formatter_bb_0, '0']
 - [blocks_tagged_stream_mux_0, '0', digital_constellation_modulator_0, '0']
 - [digital_constellation_modulator_0, '0', uhd_usrp_sink_0, '0']
 - [digital_protocol_formatter_bb_0, '0', blocks_tagged_stream_mux_0, '0']
+- [epy_block_0, '0', blocks_stream_to_tagged_stream_0, '0']
 
 metadata:
   file_format: 1
-  grc_version: 3.10.12.0
+  grc_version: 3.10.5.1
